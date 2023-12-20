@@ -27,7 +27,7 @@ class wordnote(toga.App):
         self._httpd = ThreadedWSGIServer(("127.0.0.1", 0), WSGIRequestHandler)
         self._httpd.daemon_threads = True
 
-        os.environ["DJANGO_SETTINGS_MODULE"] = "webapp.webapp.settings"
+        os.environ["DJANGO_SETTINGS_MODULE"] = 'webapp.mysite.settings'
         django.setup(set_prefix=False)
         wsgi_handler = WSGIHandler()
         self._httpd.set_app(wsgi_handler)
@@ -53,7 +53,7 @@ class wordnote(toga.App):
 
         self.server_exists.wait()
         host, port = self._httpd.socket.getsockname()
-        self.web_view.url = f"http://{host}:{port}/"
+        self.web_view.url = f"http://{host}:{port}/main_app"
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = self.web_view
