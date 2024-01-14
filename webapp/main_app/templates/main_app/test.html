@@ -1,14 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1 align="center">Test window</h1>
-<ul>
-    <li><a href="{% url 'home' %}">Back</a></li>
-</ul>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
 
-</body>
+
+        </style>
+        {% load static %}
+         <script src="{% static 'main_app/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'main_app/css/main_app.css' %}">
+        <link rel="stylesheet" href="{% static 'main_app/bootstrap/css/bootstrap.min.css' %}">
+
+    </head>
+
+    <body>
+        <div class="fullscreen">
+            <div class="cards-count">
+                <h2 id="cards-number">Question:</h2>
+            </div>
+
+            <div class="question-container">
+                <div id="question"></div>
+            </div>
+                <div class="answer-container">
+                    <div class="answer-option_test" onclick="checkAnswer(0)">Answer 1</div>
+                    <div class="answer-option_test" onclick="checkAnswer(1)">Answer 2</div>
+                </div>
+
+                <div class="answer-container">
+                    <div class="answer-option_test" onclick="checkAnswer(2)">Answer 3</div>
+                    <div class="answer-option_test" onclick="checkAnswer(3)">Answer 4</div>
+                </div>
+
+                <div class="fixed-bottom" onclick="window.location.href='{% url 'home' %}'">
+                    Back
+                </div>
+
+        </div>
+
+        <audio id="audioOk" controls>
+            <source src="{% static 'main_app/audio/ok.mp3' %}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <audio id="audioFail" controls>
+            <source src="{% static 'main_app/audio/nopeok.mp3' %}" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <!--        /////////////////////////////////////////-----JavaScript----////////////////////////////////////////////////////////////////-->
+
+
+<script>
+    var cards = {{ json_data|safe }};
+    var currentQuestionIndex = 0;
+    var correctAnswers = []
+    var incorrectAnswers = []
+    var audioOk = document.getElementById('audioOk');
+    var audioFail = document.getElementById('audioFail');
+    audioOk.currentTime = 0;
+    audioFail.currentTime = 0;
+
+
+    function loadQuestion(){
+        var questionNumber = currentQuestionIndex+1;
+
+        var questionElement = document.getElementById('question');
+        questionElement.innerText = cards[currentQuestionIndex].question_word;
+
+        var questionCard = document.getElementById('cards-number');
+        questionCard.innerText = 'Question №: ' + questionNumber + ' from ' +  cards.length
+
+        var answerList = [
+            cards[currentQuestionIndex].correct_answer,
+            cards[currentQuestionIndex].incorrect_answer1,
+            cards[currentQuestionIndex].incorrect_answer2,
+            cards[currentQuestionIndex].incorrect_answer3,
+        ]
+        shuffleArray(answerList)
+
+        // Display the shuffled answers
+        for (var i = 0; i < 4; i++) {
+            var answerOption = document.getElementsByClassName('answer-option_test')[i];
+            answerOption.innerText = answerList[i];
+        }
+    }
+
+    function checkAnswer(selectedIndex) {
+
+        if (document.getElementsByClassName('answer-option_test')[selectedIndex].innerText === cards[currentQuestionIndex].correct_answer) {
+            audioOk.currentTime = 0;
+            audioOk.play();
+            document.getElementsByClassName('answer-option_test')[selectedIndex].style.background = '#4caf50';
+            correctAnswers.push(cards[currentQuestionIndex].base_id)
+        }
+        else {
+            audioFail.currentTime = 0;
+            audioFail.play();
+            var myArray = [0, 1, 2, 3];
+            var index = 0
+            for (var i = 0; i < myArray.length; i++) {
+                if (document.getElementsByClassName('answer-option_test')[i].innerText === cards[currentQuestionIndex].correct_answer) {
+                    document.getElementsByClassName('answer-option_test')[i].style.background = '#4caf50';
+                }
+            }
+            document.getElementsByClassName('answer-option_test')[selectedIndex].style.background = '#a35f5f';
+            incorrectAnswers.push(cards[currentQuestionIndex].base_id)
+        }
+        // Move to the next question
+
+        currentQuestionIndex++;
+        if (currentQuestionIndex < cards.length) {
+            // Load the next question
+            myDelayFunc();
+        } else {
+
+            sendChanges();
+            setTimeout(function() {
+
+                // Replace '/your_target_url/' with the actual URL you want to redirect to
+                window.location.href = '/main_app/';
+            }, 2000);
+        }
+    }
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+
+    // Initial load
+
+    loadQuestion();
+
+    function sendChanges(){
+        // Make an AJAX request to your Django view
+        fetch('/main_app/change_progress/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if you are using it
+            },
+            body: JSON.stringify({ list1: correctAnswers, list2: incorrectAnswers })
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+
+
+    function myDelayFunc() {
+        console.log("Start");
+
+        // Code before the delayed block
+
+        // Introduce a delay of 2 seconds
+        const delayPromise = new Promise(resolve => {
+            setTimeout(resolve, 1000);
+        });
+
+        // Execute the delayed block after the delay
+        delayPromise.then(() => {
+
+            document.getElementsByClassName('answer-option_test')[0].style.background = '#9628ff';
+            document.getElementsByClassName('answer-option_test')[1].style.background = '#9628ff';
+            document.getElementsByClassName('answer-option_test')[2].style.background = '#9628ff';
+            document.getElementsByClassName('answer-option_test')[3].style.background = '#9628ff';
+            loadQuestion();
+
+
+        });
+    }
+
+
+</script>
+
+
+    </body>
+
+
+
+
 </html>

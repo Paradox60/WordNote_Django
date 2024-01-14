@@ -1,14 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ language }}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'main_app/css/main_app.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_app/bootstrap/css/bootstrap.min.css' %}" >
 </head>
 <body>
-<h1 align="center">Library window</h1>
-<ul>
-    <li><a href="{% url 'home' %}">Back</a></li>
-</ul>
+
+<div class="fullscreen">
+    <div class="fullscreen-container" >
+        <h3 align="center">Library window with {{ word_pairs|length }} words </h3>
+
+
+        {% for word_pair in word_pairs %}
+            <div class="word-pair-item_library"  onclick="openPopup('{{ word_pair.word }}', '{{ word_pair.translate }}', '{{ word_pair.progress }}', '{{ word_pair.base_id }}' )">
+                <div>
+                    <div class="words-card_library">
+                        {{ word_pair.word }}  {{ word_pair.translate }}
+                    </div>
+
+                    <div class="progress-card_library">
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: {{ word_pair.progress }}%; background-color: #8d9fd9;">
+                                <div class="progress-text">Progress: {{ word_pair.progress }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+         <div class="fixed-bottom" onclick="window.location.href='{% url 'home' %}'">Back</div>
+    </div>
+</div>
+
+
+
+<!-- Pop-up overlay -->
+<div id="popupOverlay" class="popup-overlay" onclick="closePopup()">
+    <!-- Pop-up content -->
+    <div id="popupContent" class="popup-content" onclick="event.stopPropagation();">
+
+
+        <label for="editWord">Edit Word:</label>
+        <input type="text" id="editWord" name="editWord">
+
+        <label for="editTranslation">Edit Translation:</label>
+        <input type="text" id="editTranslation" name="editTranslation">
+
+        <label for="editProgress">Edit Progress:</label>
+        <input type="number" id="editProgress" name="editProgress" min="0" max="100" value="0" step="5">
+
+        <label for="progressSlider">Progress:</label>
+        <input type="range" id="progressSlider" min="0" max="100" value="0" step="1">
+
+        <!-- Display the current progress value -->
+        <p>Current Progress: <span id="progressValue">0</span></p>
+
+        <!-- Add a progress bar to the pop-up -->
+        <div id="progressContainer" style="display: none;">
+            <div id="progressBar"></div>
+        </div>
+        <button onclick="saveChanges()">Save Changes</button>
+        <button onclick="deleteWordPair()">Delete Card</button>
+    </div>
+
+</div>
+
+
+<script src="{% static 'main_app/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- JavaScript for opening the pop-up window and passing data -->
+{% csrf_token %}  <!-- Include the CSRF token in your template -->
+<script>
+    function openPopup(word, translation, progress,wordPairId) {
+        document.getElementById('editWord').value = word;
+        document.getElementById('editTranslation').value = translation;
+        document.getElementById('editProgress').value = progress;
+        document.getElementById('popupOverlay').style.display = 'flex';
+    }
+    function closePopup() {
+        document.getElementById('popupOverlay').style.display = 'none';
+    }
+    function saveChanges() {
+        console.log('Attempting to save changes...');
+
+        // Display the progress bar and slider
+        document.getElementById('progressContainer').style.display = 'block';
+        document.getElementById('progressSlider').style.display = 'block';
+
+        var wordPairId = document.getElementById('popupId').innerText.split(': ')[1];
+        var newWord = document.getElementById('editWord').value;
+        var newTranslation = document.getElementById('editTranslation').value;
+        var progressValueClean = document.getElementById('editProgress').value;
+        var progressValue = parseInt(progressValueClean);
+
+        if (progressValue > 100) {
+            progressValue = 100;}
+    // Check if the variable is less than 0
+        else if (progressValue < 0) {
+            progressValue = 0;
+    }
+
+
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        // Get the slider element
+        var progressSlider = document.getElementById('progressSlider');
+
+        // Track the progress of the AJAX request based on the slider value
+        var newProgress = 50;
+        progressSlider.addEventListener('input', function () {
+            newProgress = progressSlider.value;
+            // Update the width of the progress bar
+            document.getElementById('progressBar').style.width = newProgress + '%';
+            // Update the display of the current progress value
+            document.getElementById('progressValue').innerText = newProgress;
+        });
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/main_app/save_changes/', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+
+        xhr.onreadystatechange = function () {
+            console.log('ReadyState:', xhr.readyState, 'Status:', xhr.status);
+
+            if (xhr.readyState === 4) {
+                // Hide the progress bar and slider after the request is complete
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('progressSlider').style.display = 'none';
+
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        console.log('Changes saved successfully.');
+                        closePopup();
+
+                        // Reload the library page after successful save
+                        window.location.reload();
+                    } else {
+                        console.error('Error:', response.error);
+                    }
+                } else {
+                    console.error('Error:', xhr.statusText);
+                }
+            }
+        };
+
+        var data = {
+            'wordPairId': wordPairId,
+            'newWord': newWord,
+            'newTranslation': newTranslation,
+            'progressValue': progressValue  // Include the progress value in the data
+        };
+
+        console.log('Data:', JSON.stringify(data));
+
+        xhr.send(JSON.stringify(data));
+    }
+
+        // Function to delete a WordPair
+    function deleteWordPair() {
+        var wordPairId = document.getElementById('popupId').innerText.split(': ')[1];
+
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/main_app/delete_word_pair/', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', csrfToken)
+
+         xhr.onreadystatechange = function () {
+            console.log('ReadyState:', xhr.readyState, 'Status:', xhr.status);
+
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        console.log('Changes saved successfully.');
+                        closePopup();
+
+                        // Reload the library page after successful save
+                        window.location.reload();
+                    } else {
+                        console.error('Error:', response.error);
+                    }
+                } else {
+                    console.error('Error:', xhr.statusText);
+                }
+            }
+        };
+        var data = {
+            'wordPairId': wordPairId,
+        };
+
+        console.log('Data:', JSON.stringify(data));
+        xhr.send(JSON.stringify(data));
+    }
+
+
+
+</script>
 
 </body>
 </html>

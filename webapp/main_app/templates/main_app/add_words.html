@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1 align="center">Add words window</h1>
-<ul>
-    <li><a href="{% url 'home' %}">Back</a></li>
-</ul>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
 
-</body>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'main_app/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'main_app/css/main_app.css' %}">
+    </head>
+
+    <body>
+    <div class="fullscreen">
+        <h1 align="center">Add words window</h1>
+            <div class="container">
+
+                <form method="post" action="" >
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        {{ form.as_p }}
+                    </div>
+
+                    <div class="save-form">
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="fixed-bottom" onclick="window.location.href='{% url 'home' %}'">Back</div>
+    </div>
+
+     <script src="{% static 'main_app/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    </body>
 </html>

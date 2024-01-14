@@ -1,0 +1,297 @@
+@font-face {
+    font-family: 'Magazine';
+    src: url('../fonts/ljk_Adventure.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Irish-grover';
+    src: url('../fonts/IrishGrover-Regular.ttf') format('truetype');
+}
+
+
+body {
+    bgcolor: #6D8AB5;
+    margin: 0;
+    overflow: hidden; /* Prevent scrolling on the body */
+}
+
+.swiper-container{
+    background: #6D8AB5;
+}
+
+.fullscreen {
+    font-family: 'Irish-grover', 'Magazine';
+    width: 100vw; /* 100% of the viewport width */
+    height: 100vh; /* 100% of the viewport height */
+    background: #6D8AB5;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    color: #fff; /* Set your desired text color */
+    font-size: 24px; /* Set your desired font size */
+}
+
+.fullscreen-container {
+    font-family: 'Irish-grover', 'Magazine';
+    max-height: 100vh; /* Set the maximum height as needed */
+    overflow-y: auto;
+    border: 0px solid #ddd; /* Optional: Add a border for better visibility */
+    padding: 10px;
+    background: #6D8AB5;
+    margin-bottom: 50px;
+}
+
+.div-container {
+    width: 70%;
+    display: flex;
+    margin: 85px auto 0; /* Top margin set to 100px */
+    flex-direction: column;
+    justify-content: space-between;
+    height: 60vh;
+}
+
+.div {
+    width: 100%;
+    height: 70px;
+    margin-bottom: 25px;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    border-radius: 25px;
+    background: #ABBBD9;
+    display: flex;
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset, 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+    color: #260056;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #64D976; /* Adjust the background color as needed */
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+}
+
+.fixed-bottom_main {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #64D976; /* Adjust the background color as needed */
+    padding: 10px;
+    display: flex;
+    text-align: center;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+}
+.inner-fix-bot-left-right_main{
+    width:50%;
+}
+.inner-fix-bot-middle_main{
+    width: 50px;
+    height: 50px;
+}
+
+.cards-count {
+    width: 100%;
+    height: 35px; /* You can adjust the height as needed */
+    background-color: #aaf;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.question-container {
+    width: 100%;
+    height: 100px; /* You can adjust the height as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color:black;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.answer-container {
+    width: 100%;
+    display: flex; /* You can adjust the height as needed */
+    background-color: #6D8AB5;
+}
+
+.answer-option_test {
+    width: 100%;
+    height: 75px; /* You can adjust the height as needed */
+    background-color: #9628ff;
+    display: flex;
+    margin:10px;
+    border-radius:15px;
+    border-color: black;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.save-form{
+    max-width: 500px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center text vertically */
+    justify-content: center;
+}
+
+.save-form button{
+    width: 75%;
+}
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.popup-content label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.popup-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#progressContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20%;
+    max-width: 10px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#progressBar {
+    height: 20px;
+    background-color: #4caf50;
+    width: 0;
+    border-radius: 8px;
+}
+
+.div:hover {
+    background-color: #2980b9;
+}
+
+
+
+
+/* Style for the progress container in Library */
+
+.word-pair-item_library {
+    width: 80%;
+    height: 75px;
+    background-color: lightblue;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    user-select: none;
+    color: black;
+}
+
+.word-pair-item span {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.words-card_library {
+    width: 100%;
+    height: 15px;
+    text-align: center;
+    display: flex;
+    margin-bottom:15px;
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+    color: #260056;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+}
+.progress-card_library {
+    width: 100%;
+    margin-top: 10px;
+    margin: 5px;
+    height: 26px;
+    text-align: center;
+    background-color: #2b3d3b;
+    color: #260056;
+    border-radius: 10px;
+    display: flex;
+    font-size: 20px;
+    align-items: center; /* Center text vertically */
+    justify-content: center; /* Center text horizontally */
+}
+.progress-container {
+    width: 100%; /* Set the desired width for the progress container */
+    margin: 5px; /* Center the progress container */
+    position: relative;
+    margin: 2px;
+    height: 20px;
+
+}
+
+/* Style for the progress bar */
+.progress-bar {
+
+    border-radius: 10px;
+    height: 20px; /* Set the desired height for the progress bar */
+}
+
+/* Style for the progress text */
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #a35f5f; /* Set the text color */
+}
+
+/* Style for the popup container in Library */
+#popupContent{
+    min-width: 250px;
+    max-width: 60%;
+    min-height: 250px;
+    max-height: 75vh;
+    margin-top: 10px;
+    position: absolute;
+
+}

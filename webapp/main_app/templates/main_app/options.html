@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Title</title>
+          <!-- Link to your CSS file -->
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'main_app/css/main_app.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'main_app/bootstrap/css/bootstrap.min.css' %}" >
+    </head>
+
+    <body>
+    <div class="fullscreen">
+        <div id="div-container">
+            папарапам
+        </div>
+
+        <div class="fixed-bottom_main">
+            <div class="inner-fix-bot-left-right_main" onclick="window.location.href='{% url 'home' %}'">main</div>
+        </div>
+
+
+
+    </div>
+        <script src="{% static 'main_app/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    </body>
+</html>

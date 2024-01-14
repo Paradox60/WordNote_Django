@@ -2,19 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_app/css/main_app.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_app/bootstrap/css/bootstrap.min.css' %}" >
+    <title>Swiping Screens</title>
 </head>
 <body>
-<h1 align="center">Hello World and Anna</h1>
-<ul>
-    <li><a href="{% url 'add_words' %}">Add words</a></li>
-    <li><a href="{% url 'test' %}">Test</a></li>
-    <li><a href="{% url 'library' %}">Library</a></li>
-</ul>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
 
-<button onclick="window.location.href='{% url 'add_words' %}'">Go to Page 1</button>
-<button onclick="window.location.href='{% url 'test' %}'">Go to Page 2</button>
-<button onclick="window.location.href='{% url 'library' %}'">Go to Page 3</button>
+            <div class="swiper-slide">
+                <div class="fullscreen">
+                    <div class="div-container">
+                        <div class="div" onclick="window.location.href='{% url 'test' %}'" >Word-Translation</div>
+                        <div class="div" onclick="window.location.href='{% url 'test_reverse' %}'" >Translation-Word</div>
+                    </div>
+                    <div class="fixed-bottom_main">
+                        <div class="inner-fix-bot-left-right_main">
+                            <div class="swiper-button-next"></div>
+                        </div>
+                        <div class="inner-fix-bot-middle_main" onclick="window.location.href='{% url 'options' %}'">options</div>
+                        <div class="inner-fix-bot-left-right_main">
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="swiper-slide">
+                 <div class="fullscreen">
+                    <div class="div-container">
+                        <div class="div" onclick="window.location.href='{% url 'add_words' %}'" >Add Words</div>
+                        <div class="div" onclick="window.location.href='{% url 'add_words' %}'" >Sticky Notes</div>
+                        <div class="div" onclick="window.location.href='{% url 'trying' %}'" >Notes Gallery</div>
+                        <div class="div" onclick="window.location.href='{% url 'library' %}'" >Words Library</div>
+                    </div>
+                    <div class="fixed-bottom_main">
+                        <div class="inner-fix-bot-left-right_main">
+                            <div class="swiper-button-next"></div>
+                        </div>
+                        <div class="inner-fix-bot-middle_main" onclick="window.location.href='{% url 'options' %}'">options</div>
+                        <div class="inner-fix-bot-left-right_main">
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Add more slides as needed -->
+        </div>
+
+
+    </div>
+    <script src="{% static 'main_app/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    </script>
 </body>
 </html>
